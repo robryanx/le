@@ -31,7 +31,6 @@ infrastructure.
     * [Processes](#processes)
   * [Deployment best practices](#deployment-best-practices)
   * [Linux Agent Installation](#linux-agent-le-agent-installation)
-  * [Contact Support](#contact-support)
 
 
 How to use
