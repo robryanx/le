@@ -53,7 +53,7 @@ FOLLOW_CMD="le follow"
 LOGGER_CMD="logger -t LogentriesTest Test Message Sent By LogentriesAgent"
 DAEMON_RESTART_CMD="if which service &>/dev/null ; then service logentries restart ; else /etc/init.d/logentries restart ; fi"
 FOUND=0
-AGENT_NOT_FOUND="The agent was not found after installation.\n Please contact support@logentries.com\n"
+AGENT_NOT_FOUND="The agent was not found after installation.\n"
 SET_ACCOUNT_KEY="--account-key="
 LE_ACCOUNT_KEY=$1
 
@@ -198,7 +198,7 @@ elif [ -f /etc/debian_version ]; then
 	fi
 
 	if [ "$CODENAME" == "UNKNOWN" ]; then
-		printf "Unknown distribution, please contact support@logentries.com\n"
+		printf "Unknown distribution.\n"
 		exit 1
 	fi
 
@@ -391,5 +391,5 @@ if [ $FOUND == "1" ]; then
 	printf "***** Install Complete! *****\n"
 
 else
-	printf "Unknown distribution. Please contact support@logentries.com with your system details\n\n"
+	printf "Unknown distribution.\n\n"
 fi
