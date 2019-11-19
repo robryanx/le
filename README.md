@@ -31,7 +31,6 @@ infrastructure.
     * [Processes](#processes)
   * [Deployment best practices](#deployment-best-practices)
   * [Linux Agent Installation](#linux-agent-le-agent-installation)
-  * [Contact Support](#contact-support)
 
 
 How to use
@@ -835,8 +834,3 @@ There are two ways to install the LE Agent.
 2. Automated, using your Logentries' account key - Run the Linux installer using your Logentries Account Key as the first command line arguemnt as in `sudo bash logentries_install.sh <account_key>` for example `sudo bash logentries_install.sh xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.  This will bypass the prompts for your Email or password and simply download and install the LE Agent adding this Host and its Logs to your Account.
 
 To attain your Logentries Account Key from the Logentries web UI see: https://logentries.com/doc/accountkey/
-
-
-Contact Support
------------------------------------
-Please email our support team at support@logentries.com if you need any help.
