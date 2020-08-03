@@ -266,7 +266,7 @@ import fileinput
 import getopt
 import getpass
 import glob
-import httplib
+import http.client
 import logging
 import os
 import os.path
@@ -373,7 +373,7 @@ except ImportError:
     FEAT_SSL = False
 
     try:
-        _ = httplib.HTTPSConnection
+        _ = http.client.HTTPSConnection
     except AttributeError:
         die('NOTE: Please install Python "ssl" module.')
 
@@ -573,7 +573,7 @@ def collect_log_names(system_info):
 
     log.debug("Collected logs: %s", logs)
     try:
-        c = httplib.HTTPSConnection(LE_SERVER_API)
+        c = http.client.HTTPSConnection(LE_SERVER_API)
         request = {
             'logs': json_dumps(logs),
             'distname': system_info['distname'],
@@ -2328,7 +2328,7 @@ def get_response(operation, addr, data=None, headers={}, silent=False, die_on_er
     except socket.error as msg:  # Network error
         if not silent:
             log.debug("Network error: %s", msg)
-    except httplib.BadStatusLine:
+    except http.client.BadStatusLine:
         err = "Internal error, bad status line"
         if die_on_error:
             die(err)
