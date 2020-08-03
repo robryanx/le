@@ -55,7 +55,7 @@ KEY_LEN = 36
 ACCOUNT_KEYS_API = '/agent/account-keys/'
 ID_LOGS_API = '/agent/id-logs/'
 
-LINE_SEPARATOR = '\xe2\x80\xa8'.decode('utf8')
+LINE_SEPARATOR = '\xe2\x80\xa8'
 
 PROXY_TYPE_PARAM = "proxy-type"
 PROXY_URL_PARAM = "proxy-url"
