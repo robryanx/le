@@ -286,9 +286,9 @@ import urllib
 import logging.handlers
 
 from . backports import CertificateError, match_hostname
-from . formats import formats
-from . metrics import metrics
-from . socks import socks
+from . formats import *
+from . metrics import *
+from . socks import *
 
 # Strip user key from log output
 UUID_REGEX = re.compile(r'([a-f0-9]{8})-([a-f0-9]{4}-){3}[a-f0-9]{12}', re.IGNORECASE)
