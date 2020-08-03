@@ -259,7 +259,7 @@ except ImportError:
     pass
 
 import configparser
-import Queue
+import queue
 import atexit
 import datetime
 import fileinput
@@ -1355,7 +1355,7 @@ class Transport(object):
         self.port = port
         self.use_ssl = use_ssl
         self.preamble = preamble
-        self._entries = Queue.Queue(SEND_QUEUE_SIZE)
+        self._entries = queue.queue(SEND_QUEUE_SIZE)
         self._socket = None # Socket with optional TLS encyption
         self._debug_transport_events = debug_transport_events
 
@@ -1540,10 +1540,10 @@ class Transport(object):
             try:
                 self._entries.put_nowait(entry)
                 break
-            except Queue.Full:
+            except queue.Full:
                 try:
                     self._entries.get_nowait()
-                except Queue.Empty:
+                except queue.Empty:
                     pass
 
     def close(self):
@@ -1559,7 +1559,7 @@ class Transport(object):
             try:
                 try:
                     entry = self._entries.get(True, IAA_INTERVAL)
-                except Queue.Empty:
+                except queue.Empty:
                     entry = IAA_TOKEN
                 self._send_entry(entry + '\n')
             except Exception:
