@@ -581,7 +581,7 @@ class StderrTransport(object):
         return self
 
     def send(self, entry):
-        print >> sys.stderr, entry,
+        print(entry, file=sys.stderr)
         if self._transport:
             self._transport.send(entry)
 
@@ -673,7 +673,7 @@ if __name__ == '__main__':
         metrics.start()
         time.sleep(600)  # Is there a better way?
     except KeyboardInterrupt:
-        print >>sys.stderr, "\nTerminated"
+        print("\nTerminated", file=sys.stderr)
 
     if metrics:
         metrics.cancel()

@@ -71,7 +71,7 @@ except ImportError:
         return socket.ssl(sock)
 
 def report(what):
-    print >> sys.stderr, what
+    print(what, file=sys.stderr)
 
 class ServerHTTPSConnection(httplib.HTTPSConnection):
 

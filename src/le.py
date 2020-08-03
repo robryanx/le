@@ -320,11 +320,11 @@ log.addHandler(stream_handler)
 
 def debug_filters(msg, *args):
     if config.debug_filters:
-        print >> sys.stderr, msg % args
+        print(msg % args, file=sys.stderr)
 
 def debug_formatters(msg, *args):
     if config.debug_formatters:
-        print >> sys.stderr, msg % args
+        print(msg % args, file=sys.stderr)
 
 #
 # Imports that may not be available
@@ -898,8 +898,7 @@ def choose_account_key(accounts):
 
     for i in range(0, len(accounts)):
         account = accounts[i]
-        print >> sys.stderr, '[%s] %s %s' % (
-            i, account['account_key'][:8], account['name'])
+        print('[%s] %s %s' % (i, account['account_key'][:8], account['name']), file=sys.stderr)
 
     while True:
         try:
@@ -908,7 +907,7 @@ def choose_account_key(accounts):
                 return accounts[selection]['account_key']
         except ValueError:
             pass
-        print >> sys.stderr, 'Invalid choice. Please try again or break with Ctrl+C.'
+        print('Invalid choice. Please try again or break with Ctrl+C.', file=sys.stderr)
 
 
 def retrieve_account_key():
@@ -932,23 +931,23 @@ def retrieve_account_key():
                 if response:
                     resp_val = response.status
                 if resp_val == 403:
-                    print >> sys.stderr, 'Error: Login failed. Invalid credentials.'
+                    print('Error: Login failed. Invalid credentials.', file=sys.stderr)
                 else:
-                    print >> sys.stderr, 'Error: Unexpected login response from logentries (%s).' % resp_val
+                    print('Error: Unexpected login response from logentries (%s).' % resp_val, file=sys.stderr)
             else:
                 data = json_loads(response.read())
                 return choose_account_key(data['accounts'])
         except socket.error as msg:
-            print >> sys.stderr, 'Error: Cannot contact server, %s' % msg
+            print('Error: Cannot contact server, %s' % msg, file=sys.stderr)
         except ValueError as msg:
-            print >> sys.stderr, 'Error: Invalid response from the server (Parsing error %s)' % msg
+            print('Error: Invalid response from the server (Parsing error %s)' % msg, file=sys.stderr)
         except KeyError:
-            print >> sys.stderr, 'Error: Invalid response from the server, user key not present.'
+            print('Error: Invalid response from the server, user key not present.', file=sys.stderr)
         except EOFError:
             # Ctrl+D in get_pass, simulate Ctrl+C
             raise KeyboardInterrupt()
 
-        print >> sys.stderr, 'Try to log in again, or press Ctrl+C to break'
+        print('Try to log in again, or press Ctrl+C to break', file=sys.stderr)
 
 class FollowMultilog(object):
     """
@@ -1006,7 +1005,7 @@ class FollowMultilog(object):
                                     True)
                 self._followers.append(follower)
                 if config.debug_multilog:
-                    print >> sys.stderr, "Number of followers increased to: %s" %len(self._followers)
+                    print("Number of followers increased to: %s" %len(self._followers), file=sys.stderr)
             else:
                 log.debug("Warning: Allowed maximum of files that can be followed reached")
                 break
@@ -1017,7 +1016,7 @@ class FollowMultilog(object):
                 follower.close()
                 self._followers.remove(follower)
                 if config.debug_multilog:
-                    print >> sys.stderr, "Number of followers decreased to: %s" %len(self._followers)
+                    print("Number of followers decreased to: %s" %len(self._followers), file=sys.stderr)
 
     def close(self):
         """
@@ -1308,7 +1307,7 @@ class Follower(object):
             if not line:
                 continue
             if config.debug_events:
-                print >> sys.stderr, line
+                print(line, file=sys.stderr)
             line = self.entry_formatter(line)
             if not line:
                 continue
@@ -1525,7 +1524,7 @@ class Transport(object):
             try:
                 self._socket.send(entry.encode('utf8'))
                 if self._debug_transport_events:
-                    print >> sys.stderr, entry.encode('utf8'),
+                    print(entry.encode('utf8'), file=sys.stderr)
                 break
             except socket.error:
                 self._open_connection()
@@ -2544,7 +2543,7 @@ def request_follow(filename, name, type_opt):
     """
     config.agent_key_required()
     followed_log = create_log(config.agent_key, name, filename, type_opt)
-    print "Will follow %s as %s" % (filename, name)
+    print ("Will follow %s as %s" % (filename, name))
     log.info("Don't forget to restart the daemon")
     _startup_info()
     return followed_log
@@ -3091,7 +3090,7 @@ def cmd_monitor(args):
     except KeyboardInterrupt:
         pass
 
-    print >> sys.stderr, "\nShutting down"
+    print("\nShutting down", file=sys.stderr)
     # Stop metrics
     if smetrics:
         smetrics.cancel()
@@ -3192,7 +3191,7 @@ def user_prompt(path):
     file_candidates = glob.glob(path)
     loglist_with_paths = get_loglist_with_paths()
     identical_path = False
-    print "\nExisting destination Logs for this host and the associated Paths are:"
+    print("\nExisting destination Logs for this host and the associated Paths are:")
     print('\t{0:50}{1}'.format('LOGNAME', 'PATH'))
     for logname, filepath in loglist_with_paths.items():
         # Test if an identical path is already in use!
@@ -3202,26 +3201,26 @@ def user_prompt(path):
         else:
             print('\t{0:50}{1}'.format(logname, filepath))
     if identical_path:
-        print "NOTE: there are destination logs in above list with identical paths."
-    print "\nRequested path is: %s" % path
+        print("NOTE: there are destination logs in above list with identical paths.")
+    print("\nRequested path is: %s" % path)
     if len(file_candidates) == 0:
-        print "\nNo Files were found for this path at this time.\n"
+        print("\nNo Files were found for this path at this time.\n")
     else:
-        print "\nFiles found for this path:"
+        print("\nFiles found for this path:")
         file_count = 0
         for filename in file_candidates:
             if file_count < MAX_FILES_FOLLOWED:
                 print ('\t{0}'.format(filename))
                 file_count = file_count+1
     while True:
-        print "\nUse new path to follow files [y] or quit [n]?"
+        print("\nUse new path to follow files [y] or quit [n]?")
         user_resp = raw_input().lower()
         if user_resp == 'n':
             sys.exit(EXIT_OK)
         elif user_resp == 'y':
             return True
         else:
-            print "Please try again"
+            print("Please try again")
 
 def cmd_followed(args):
     """
@@ -3238,10 +3237,10 @@ def cmd_followed(args):
 
     # Check that we don't follow that file already
     if is_followed(filename):
-        print 'Following %s' % filename
+        print('Following %s' % filename)
         sys.exit(EXIT_OK)
     else:
-        print 'NOT following %s' % filename
+        print('NOT following %s' % filename)
         sys.exit(EXIT_NO)
 
 
@@ -3263,7 +3262,7 @@ def cmd_whoami(args):
     no_more_args(args)
 
     list_object(request('hosts/%s' % config.agent_key, True, True))
-    print ''
+    print('')
     list_object(request('hosts/%s/' % config.agent_key, True, True))
 
 
@@ -3295,34 +3294,34 @@ def list_object(request, hostnames=False):
     if t == 'rootlist':
         item_name = 'item'
     elif t == 'host':
-        print 'name =', request['name']
-        print 'hostname =', request['hostname']
-        print 'key =', request['key']
-        print 'distribution =', request['distname']
-        print 'distver =', request['distver']
+        print('name =', request['name'])
+        print('hostname =', request['hostname'])
+        print('key =', request['key'])
+        print('distribution =', request['distname'])
+        print('distver =', request['distver'])
         return
     elif t == 'log':
-        print 'name =', request['name']
-        print 'filename =', request['filename']
-        print 'key =', request['key']
-        print 'type =', request['type']
-        print 'follow =', request['follow']
+        print('name =', request['name'])
+        print('filename =', request['filename'])
+        print('key =', request['key'])
+        print('type =', request['type'])
+        print('follow =', request['follow'])
         if 'token' in request:
-            print 'token =', request['token']
+            print('token =', request['token'])
         if 'logtype' in request:
-            print 'logtype =', logtype_name(request['logtype'])
+            print('logtype =', logtype_name(request['logtype']))
         return
     elif t == 'list':
-        print 'name =', request['name']
+        print('name =', request['name'])
         return
     elif t == 'hostlist':
         item_name = 'host'
         if hostnames:
             index_name = 'hostname'
     elif t == 'logtype':
-        print 'title =', request['title']
-        print 'description =', request['desc']
-        print 'shortcut =', request['shortcut']
+        print('title =', request['title'])
+        print('description =', request['desc'])
+        print('shortcut =', request['shortcut'])
         return
     elif t == 'loglist':
         item_name = 'log'
@@ -3337,8 +3336,8 @@ def list_object(request, hostnames=False):
     ilist = sorted(ilist, key=lambda item: item[index_name])
     for item in ilist:
         if config.uuid:
-            print item['key'],
-        print "%s" % (item[index_name])
+            print(item['key'])
+        print("%s" % (item[index_name]))
     print_total(ilist, item_name)
 
 
@@ -3361,10 +3360,10 @@ def cmd_ls_ips():
     for name in [Domain.MAIN, Domain.API, Domain.DATA, Domain.PULL]:
         for info in socket.getaddrinfo(name, None, 0, 0, socket.IPPROTO_TCP):
             ip = info[4][0]
-            print >>sys.stderr, '%-16s %s' % (ip, name)
+            print('%-16s %s' % (ip, name), file=sys.stderr)
             l.append(ip)
-    print l
-    print ' '.join(l)
+    print(l)
+    print(' '.join(l))
 
 
 def cmd_ls(args):
@@ -3465,7 +3464,7 @@ def main_root():
         die(collect_log_names(system_detect(True)))
 
     if config.debug_cmd_line:
-        print >> sys.stderr, 'Debug command line args: %s' % args
+        print('Debug command line args: %s' % args, file=sys.stderr)
 
     argv0 = sys.argv[0]
     if argv0 and argv0 != '':
