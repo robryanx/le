@@ -129,7 +129,7 @@ class ServerHTTPSConnection(httplib.HTTPSConnection):
                 sock, ca_certs=self.cert_file, cert_reqs=ssl.CERT_REQUIRED)
             try:
                 match_hostname(self.sock.getpeercert(), self.host)
-            except CertificateError, ce:
+            except CertificateError as ce:
                 die("Could not validate SSL certificate for %s: %s" % (
                     self.host, ce.message))
 
@@ -148,7 +148,7 @@ def create_conf_dir(config):
     # Create logentries config
     try:
         os.makedirs(config.config_dir_name)
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST:
             if e.errno == errno.EACCES:
                 die("You don't have permission to create logentries config file. Please run logentries agent as root.")
@@ -227,7 +227,7 @@ def make_https_connection(config, s, port):
             cert_file = system_cert_file()
             if cert_file:
                 return ServerHTTPSConnection(config, s, port, cert_file)
-        except socket.error, e:
+        except socket.error as e:
             pass
 
     # Try to connect with our default certificate

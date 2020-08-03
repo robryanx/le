@@ -518,7 +518,7 @@ def _try_daemonize():
             atexit.register(rm_pidfile)
             pidfile.write("%s\n" % pid)
             pidfile.close()
-    except OSError, e:
+    except OSError as e:
         rm_pidfile(config)
         return "Cannot daemonize: %s" % e.strerror
     return None
@@ -589,9 +589,9 @@ def collect_log_names(system_info):
         log_data = data['logs']
 
         log.debug("Identified logs: %s", log_data)
-    except socket.error, msg:
+    except socket.error as msg:
         die('Error: Cannot contact server, %s' % msg)
-    except ValueError, msg:
+    except ValueError as msg:
         die('Error: Invalid response from the server (Parsing error %s)' % msg)
     except KeyError:
         die('Error: Invalid response from the server, log data not present.')
@@ -938,9 +938,9 @@ def retrieve_account_key():
             else:
                 data = json_loads(response.read())
                 return choose_account_key(data['accounts'])
-        except socket.error, msg:
+        except socket.error as msg:
             print >> sys.stderr, 'Error: Cannot contact server, %s' % msg
-        except ValueError, msg:
+        except ValueError as msg:
             print >> sys.stderr, 'Error: Invalid response from the server (Parsing error %s)' % msg
         except KeyError:
             print >> sys.stderr, 'Error: Invalid response from the server, user key not present.'
@@ -1330,15 +1330,15 @@ class Follower(object):
                 lines = self._get_lines()
                 try:
                     self._send_lines(lines)
-                except IOError, e:
+                except IOError as e:
                     if config.debug:
                         log.debug("IOError: %s", e)
                     self._open_log()
-                except UnicodeError, e:
+                except UnicodeError as e:
                     log.warn("UnicodeError sending lines `%s'", lines, exc_info=True)
-                except Exception, e:
+                except Exception as e:
                     log.error("Caught unknown error `%s' while sending lines %s", e, lines, exc_info=True)
-            except Exception, e:
+            except Exception as e:
                 log.error("Caught unknown error `%s' while sending line", e, exc_info=True)
         if self._file:
             self._update_state(self.real_name, self._get_file_position())
@@ -1435,7 +1435,7 @@ class Transport(object):
 
                 try:
                     match_hostname(s.getpeercert(), self.endpoint)
-                except CertificateError, ce:
+                except CertificateError as ce:
                     report("Could not validate SSL certificate for %s: %s" %
                         (self.endpoint, ce.message))
                     return None
@@ -1443,7 +1443,7 @@ class Transport(object):
                 s = wrap_socket(plain_socket, ca_certs=self._certs)
             return s
 
-        except IOError, e:
+        except IOError as e:
             cause = e.strerror
             if not cause:
                 cause = "(No reason given)"
@@ -1456,7 +1456,7 @@ class Transport(object):
         address = self._get_address(self._use_proxy)
         try:
             plain_socket.connect((address, self.port))
-        except IOError, e:
+        except IOError as e:
             cause = e.strerror
             if not cause:
                 cause = ""
@@ -1738,7 +1738,7 @@ class Config(object):
         """
         try:
             os.remove(self.config_filename)
-        except OSError, e:
+        except OSError as e:
             if e.errno != 2:
                 log.warning("Error: %s: %s",
                             self.config_filename, e.strerror)
@@ -1886,11 +1886,11 @@ class Config(object):
 
             self.load_configured_logs(conf)
 
-        except ConfigParser.NoSectionError, e0:
+        except ConfigParser.NoSectionError as e0:
             raise FatalConfigurationError('%s'%e0)
-        except ConfigParser.NoOptionError, e1:
+        except ConfigParser.NoOptionError as e1:
             raise FatalConfigurationError('%s'%e1)
-        except ConfigParser.MissingSectionHeaderError, e2:
+        except ConfigParser.MissingSectionHeaderError as e2:
             raise FatalConfigurationError('%s'%e2)
         return True
 
@@ -1989,7 +1989,7 @@ class Config(object):
             self.metrics.save(conf)
 
             conf.write(conf_file)
-        except IOError, e:
+        except IOError as e:
             die("Error: IO error when writing to config file: %s" % e)
 
     def check_key(self, key):
@@ -2189,7 +2189,7 @@ class Config(object):
                     pull-server-side-config= config= config.d= multilog debug-multilog"""
         try:
             optlist, args = getopt.gnu_getopt(params, '', param_list.split())
-        except getopt.GetoptError, err:
+        except getopt.GetoptError as err:
             die("Parameter error: " + str(err))
         for name, value in optlist:
             if name == "--help":
@@ -2323,10 +2323,10 @@ def get_response(operation, addr, data=None, headers={}, silent=False, die_on_er
         response = conn.getresponse()
         log.debug('Request %s %s returned status %s' % (sanitise_log_output(addr), sanitise_log_output(data), response.status))
         return response, conn
-    except socket.sslerror, msg:  # Network error
+    except socket.sslerror as msg:  # Network error
         if not silent:
             log.info("SSL error: %s", msg)
-    except socket.error, msg:  # Network error
+    except socket.error as msg:  # Network error
         if not silent:
             log.debug("Network error: %s", msg)
     except httplib.BadStatusLine:
@@ -3504,7 +3504,7 @@ def main_root():
 def main():
     try:
         main_root()
-    except FatalConfigurationError, e:
+    except FatalConfigurationError as e:
         log.error("Fatal: %s", e.msg)
     except KeyboardInterrupt:
         die("\nTerminated", EXIT_TERMINATED)
