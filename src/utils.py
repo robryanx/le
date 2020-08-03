@@ -3,7 +3,7 @@
 # vim: set ts=4 sw=4 et:
 
 import errno
-import httplib
+import http.client
 import os
 import re
 import socket
@@ -73,7 +73,7 @@ except ImportError:
 def report(what):
     print(what, file=sys.stderr)
 
-class ServerHTTPSConnection(httplib.HTTPSConnection):
+class ServerHTTPSConnection(http.client.HTTPSConnection):
 
     """
     A slight modification of HTTPSConnection to verify the certificate
@@ -83,41 +83,41 @@ class ServerHTTPSConnection(httplib.HTTPSConnection):
         self.no_ssl = config.suppress_ssl or not FEAT_SSL
         if self.no_ssl:
             if config.use_proxy == True:
-                httplib.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, context=context)
-                if hasattr(httplib.HTTPSConnection, "set_tunnel"):
-                    httplib.HTTPSConnection.set_tunnel(self, server, port)
+                http.client.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, context=context)
+                if hasattr(http.client.HTTPSConnection, "set_tunnel"):
+                    http.client.HTTPSConnection.set_tunnel(self, server, port)
                 else:
-                    httplib.HTTPSConnection._set_tunnel(self, server, port)
+                    http.client.HTTPSConnection._set_tunnel(self, server, port)
             else:
-                httplib.HTTPSConnection.__init__(self, server, port)
+                http.client.HTTPSConnection.__init__(self, server, port)
         else:
             self.cert_file = cert_file
             if FEAT_SSL_CONTEXT:
                 context = ssl.create_default_context(cafile=cert_file)
                 if config.use_proxy == True:
-                    httplib.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, context=context)
-                    if hasattr(httplib.HTTPSConnection, "set_tunnel"):
-                        httplib.HTTPSConnection.set_tunnel(self, server, port)
+                    http.client.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, context=context)
+                    if hasattr(http.client.HTTPSConnection, "set_tunnel"):
+                        http.client.HTTPSConnection.set_tunnel(self, server, port)
                     else:
-                        httplib.HTTPSConnection._set_tunnel(self, server, port)
+                        http.client.HTTPSConnection._set_tunnel(self, server, port)
                 else:
-                    httplib.HTTPSConnection.__init__(self, server, port, context=context)
+                    http.client.HTTPSConnection.__init__(self, server, port, context=context)
             else:
                 if config.use_proxy == True:
-                    httplib.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, cert_file=cert_file)
-                    if hasattr(httplib.HTTPSConnection, "set_tunnel"):
-                        httplib.HTTPSConnection.set_tunnel(self, server, port)
+                    http.client.HTTPSConnection.__init__(self, config.proxy_url, config.proxy_port, cert_file=cert_file)
+                    if hasattr(http.client.HTTPSConnection, "set_tunnel"):
+                        http.client.HTTPSConnection.set_tunnel(self, server, port)
                     else:
-                        httplib.HTTPSConnection._set_tunnel(self, server, port)
+                        http.client.HTTPSConnection._set_tunnel(self, server, port)
                 else:
-                    httplib.HTTPSConnection.__init__(self, server, port, cert_file=cert_file)
+                    http.client.HTTPSConnection.__init__(self, server, port, cert_file=cert_file)
 
     def connect(self):
         if FEAT_SSL_CONTEXT:
-            httplib.HTTPSConnection.connect(self)
+            http.client.HTTPSConnection.connect(self)
         else:
             if self.no_ssl:
-                return httplib.HTTPSConnection.connect(self)
+                return http.client.HTTPSConnection.connect(self)
             sock = create_connection(self.host, self.port)
             try:
                 if self._tunnel_host:
@@ -283,14 +283,14 @@ def domain_connect(config, domain, Domain):
         return make_https_connection(config, s, port)
     else:
         if config.use_proxy == True:
-            conn = httplib.HTTPConnection(config.proxy_url, config.proxy_port)
-            if hasattr(httplib.HTTPConnection, "set_tunnel"):
+            conn = http.client.HTTPConnection(config.proxy_url, config.proxy_port)
+            if hasattr(http.client.HTTPConnection, "set_tunnel"):
                 conn.set_tunnel(s, port)
             else:
                 conn._set_tunnel(s, port)
             return conn
         else:
-            return httplib.HTTPConnection(s, port)
+            return http.client.HTTPConnection(s, port)
 
 
 
