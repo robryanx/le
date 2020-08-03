@@ -2,7 +2,7 @@
 # coding: utf-8
 # vim: set ts=4 sw=4 et:
 
-import ConfigParser
+import configparser
 import re
 import sys
 import threading
@@ -615,7 +615,7 @@ class MetricsConfig(object):
         for item in self.DEFAULTS:
             try:
                 self.__dict__[item] = conf.get(SECT, PREFIX + item)
-            except ConfigParser.NoOptionError:
+            except configparser.NoOptionError:
                 pass
         # Process metrics
         for section in conf.sections():
@@ -623,14 +623,14 @@ class MetricsConfig(object):
                 try:
                     try:
                         token = conf.get(section, PREFIX + TOKEN)
-                    except ConfigParser.NoOptionError:
+                    except configparser.NoOptionError:
                         try:
                             token = conf.get(section, TOKEN)
-                        except ConfigParser.NoOptionError:
+                        except configparser.NoOptionError:
                             token = ''
                     pattern = conf.get(section, PREFIX + PROCESS)
                     self.processes.append([section, pattern, token])
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     pass
 
     def save(self, conf):
@@ -642,7 +642,7 @@ class MetricsConfig(object):
         for process in self.processes:
             try:
                 conf.add_section(process[0])
-            except ConfigParser.DuplicateSectionError:
+            except configparser.DuplicateSectionError:
                 continue
             conf.set(process[0], PREFIX + PROCESS, process[1])
             if process[2]:

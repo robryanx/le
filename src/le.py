@@ -258,7 +258,7 @@ try:
 except ImportError:
     pass
 
-import ConfigParser
+import configparser
 import Queue
 import atexit
 import datetime
@@ -1214,7 +1214,7 @@ class Follower(object):
             buff_lines.append(self._read_file_rest[:MAX_BLOCK_SIZE])
             self._read_file_rest = self._read_file_rest[MAX_BLOCK_SIZE:]
 
-        return [line.decode('utf-8', 'ignore') for line in buff_lines[:-1]]
+        return [line for line in buff_lines[:-1]]
 
     def _set_file_position(self, offset, start=FILE_BEGIN):
         """ Move the position of filepointers."""
@@ -1774,7 +1774,7 @@ class Config(object):
         """
 
         try:
-            conf = ConfigParser.SafeConfigParser({
+            conf = configparser.Safeconfigparser({
                 USER_KEY_PARAM: '',
                 AGENT_KEY_PARAM: '',
                 FILTERS_PARAM: '',
@@ -1885,11 +1885,11 @@ class Config(object):
 
             self.load_configured_logs(conf)
 
-        except ConfigParser.NoSectionError as e0:
+        except configparser.NoSectionError as e0:
             raise FatalConfigurationError('%s'%e0)
-        except ConfigParser.NoOptionError as e1:
+        except configparser.NoOptionError as e1:
             raise FatalConfigurationError('%s'%e1)
-        except ConfigParser.MissingSectionHeaderError as e2:
+        except configparser.MissingSectionHeaderError as e2:
             raise FatalConfigurationError('%s'%e2)
         return True
 
@@ -1910,31 +1910,31 @@ class Config(object):
                         token = uuid_parse(xtoken)
                         if not token:
                             log.warning("Invalid log token `%s' in application `%s'.", xtoken, name)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     pass
 
                 try:
                     path = conf.get(name, PATH_PARAM)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     log.debug("Not following logs for application `%s' as `%s' parameter is not specified", name, PATH_PARAM)
                     continue
 
                 destination = ''
                 try:
                     destination = conf.get(name, DESTINATION_PARAM)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     pass
 
                 formatter = ''
                 try:
                     formatter = conf.get(name, FORMATTER_PARAM)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     pass
 
                 entry_identifier = ''
                 try:
                     entry_identifier = conf.get(name, ENTRY_IDENTIFIER_PARAM)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     pass
 
                 configured_log = ConfiguredLog(name, token, destination, path, formatter, entry_identifier)
@@ -1946,7 +1946,7 @@ class Config(object):
         The file with certificates is added as well.
         """
         try:
-            conf = ConfigParser.SafeConfigParser()
+            conf = configparser.Safeconfigparser()
             create_conf_dir(self)
             conf_file = open(self.config_filename, 'wb')
             conf.add_section(MAIN_SECT)
