@@ -11,7 +11,7 @@ import traceback
 
 from . formats import *
 from . utils import report
-from __init__ import __version__
+from . __init__ import __version__
 
 # Try to import psutils
 try:
