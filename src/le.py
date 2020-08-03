@@ -10,7 +10,7 @@
 # Constants
 #
 
-from utils import *
+from . utils import *
 from __init__ import __version__
 
 CORP = "logentries"
@@ -284,11 +284,11 @@ import time
 import traceback
 import urllib
 import logging.handlers
-from backports import CertificateError, match_hostname
 
-import formats
-import metrics
-import socks
+from . backports import CertificateError, match_hostname
+from . formats import formats
+from . metrics import metrics
+from . socks import socks
 
 # Strip user key from log output
 UUID_REGEX = re.compile(r'([a-f0-9]{8})-([a-f0-9]{4}-){3}[a-f0-9]{12}', re.IGNORECASE)
