@@ -13,7 +13,7 @@ try:
     FEAT_UUID = True
 except ImportError:
     FEAT_UUID = False
-from backports import match_hostname, CertificateError
+from . backports import match_hostname, CertificateError
 
 import logging
 

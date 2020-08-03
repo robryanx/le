@@ -10,7 +10,7 @@ import time
 import traceback
 
 import formats
-from utils import report
+from . utils import report
 from __init__ import __version__
 
 # Try to import psutils
