@@ -1809,7 +1809,7 @@ class Config(object):
 
                     world_readable = bool(os.stat(_config).st_mode & stat.S_IROTH)
                     if world_readable:
-                        os.chmod(_config, 0640)
+                        os.chmod(_config, 0o640)
                 except OSError:
                     log.warn('Could not adjust permissions for config file %s', _config, exc_info=True)
 

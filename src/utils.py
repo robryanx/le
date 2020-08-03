@@ -214,7 +214,7 @@ def create_connection(host, port):
             if socket:
                 soc.close()
 
-    raise socket.error, "Cannot make connection to %s:%s" % (host, port)
+    raise socket.error("Cannot make connection to %s:%s" % (host, port))
 
 
 def make_https_connection(config, s, port):
