@@ -9,7 +9,7 @@ import threading
 import time
 import traceback
 
-from . formats import *
+from . import formats
 from . utils import report
 from . __init__ import __version__
 
