@@ -1774,7 +1774,7 @@ class Config(object):
         """
 
         try:
-            conf = configparser.Safeconfigparser({
+            conf = configparser.safeconfigparser({
                 USER_KEY_PARAM: '',
                 AGENT_KEY_PARAM: '',
                 FILTERS_PARAM: '',
@@ -1946,7 +1946,7 @@ class Config(object):
         The file with certificates is added as well.
         """
         try:
-            conf = configparser.Safeconfigparser()
+            conf = configparser.safeconfigparser()
             create_conf_dir(self)
             conf_file = open(self.config_filename, 'wb')
             conf.add_section(MAIN_SECT)
