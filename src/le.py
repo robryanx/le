@@ -479,7 +479,7 @@ def _try_daemonize():
     """
 
     try:
-        pidfile = file(config.pid_file, 'r')
+        pidfile = open(config.pid_file, 'r')
         pid = int(pidfile.read().strip())
         pidfile.close()
     except IOError:
@@ -491,7 +491,7 @@ def _try_daemonize():
     try:
         # Open pid file
         if config.pid_file:
-            file(config.pid_file, 'w').close()
+            open(config.pid_file, 'w').close()
 
         pid = os.fork()
         if pid > 0:
@@ -504,9 +504,9 @@ def _try_daemonize():
             sys.exit(EXIT_OK)
         sys.stdout.flush()
         sys.stderr.flush()
-        si = file('/dev/null', 'r')
-        so = file('/dev/null', 'a+')
-        se = file('/dev/null', 'a+', 0)
+        si = open('/dev/null', 'r')
+        so = open('/dev/null', 'a+')
+        se = open('/dev/null', 'a+', 0)
         os.dup2(si.fileno(), sys.stdin.fileno())
         os.dup2(so.fileno(), sys.stdout.fileno())
         os.dup2(se.fileno(), sys.stderr.fileno())
@@ -514,7 +514,7 @@ def _try_daemonize():
         # Write pid file
         if config.pid_file:
             pid = str(os.getpid())
-            pidfile = file(config.pid_file, 'w')
+            pidfile = open(config.pid_file, 'w')
             atexit.register(rm_pidfile)
             pidfile.write("%s\n" % pid)
             pidfile.close()
