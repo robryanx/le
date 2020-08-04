@@ -580,7 +580,7 @@ def collect_log_names(system_info):
             'distver': system_info['distver']
         }
         log.debug("Requesting %s", request)
-        c.request('post', ID_LOGS_API, urllib.urlencode(request), {})
+        c.request('post', ID_LOGS_API, urllib.parse.urlencode(request), {})
         response = c.getresponse()
         if not response or response.status != 200:
             die('Error: Unexpected response from logentries (%s).' %
@@ -920,7 +920,7 @@ def retrieve_account_key():
             password = getpass.getpass()
             c = domain_connect(config, Domain.MAIN, Domain)
             c.request('POST', ACCOUNT_KEYS_API,
-                      urllib.urlencode({'username': username, 'password': password}),
+                      urllib.parse.urlencode({'username': username, 'password': password}),
                       {
                           'Referer': 'https://logentries.com/login/',
                           'Content-type': 'application/x-www-form-urlencoded',
@@ -2350,7 +2350,7 @@ def api_request(request, required=False, check_status=False, silent=False, die_o
     retries = 5
     while retries > 0:
         response, conn = get_response(
-            "POST", LE_SERVER_API, urllib.urlencode(request),
+            "POST", LE_SERVER_API, urllib.parse.urlencode(request),
             silent=silent, die_on_error=die_on_error, domain=Domain.API,
             headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
@@ -2415,7 +2415,7 @@ def pull_request(what, params):
 
     # Obtain response
     addr = '/%s/%s/?%s' % (
-        config.user_key, urllib.quote(what), urllib.urlencode(params))
+        config.user_key, urllib.parse.quote(what), urllib.parse.urlencode(params))
     response, conn = get_response("GET", addr, domain=Domain.PULL)
 
     # Check the response
@@ -2442,7 +2442,7 @@ def request(request, required=False, check_status=False, rtype='GET', retry=Fals
     while True:
         # Obtain response
         response, conn = get_response(
-            rtype, urllib.quote('/' + config.user_key + '/' + request),
+            rtype, urllib.parse.quote('/' + config.user_key + '/' + request),
             die_on_error=not retry)
 
         # Check the response
