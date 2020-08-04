@@ -1355,7 +1355,7 @@ class Transport(object):
         self.port = port
         self.use_ssl = use_ssl
         self.preamble = preamble
-        self._entries = queue.queue(SEND_QUEUE_SIZE)
+        self._entries = queue.Queue(SEND_QUEUE_SIZE)
         self._socket = None # Socket with optional TLS encyption
         self._debug_transport_events = debug_transport_events
 
